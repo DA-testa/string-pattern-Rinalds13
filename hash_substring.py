@@ -15,8 +15,13 @@ def print_occurrences(output):
     print(' '.join(map(str, output)))
 
 def get_occurrences(pattern, text):
-    # this function should find the occurances using Rabin Karp alghoritm 
+    indeks = []
+    pg, tg = len(pattern), len(text)
+    ag, q = 256, 1
 
+    for i in range(pg - 1):
+        q = (q * ag)
+    hash_ver = nev = i = j = h = 0
     # and return an iterable variable
     return [0]
 
