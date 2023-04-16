@@ -1,33 +1,54 @@
-def read_input():
-    c = input()
-    if c.startswith('F'):
-        with open('tests/06', 'r') as f:
-            pattern, text = map(str.strip, f.readlines())
-    else:
-        pattern, text = input().strip(), input().strip()
+def get_input_type():
+    while True:
+        input_type = input().strip().upper()
+        if input_type in ('K', 'F'):
+            return input_type
+        else:
+            print("error")
+
+
+def read_from_keyboard():
+    pattern = input().strip()
+    text = input().strip()
     return pattern, text
 
-def print_occurrences(output):
-    print(' '.join(map(str, output)))
 
-def get_occurrences(pattern, text):
-    ind = []
-    p_len, t_len = len(pattern), len(text)
-    a_len, q = 256, 1
-    for i in range(p_len - 1):
-        q = (a_len * q)
-    phash_val = thash_val = i = j = h = 0
-    for i in range(p_len):
-        phash_val = (a_len * phash_val + ord(pattern[i])) % q
-        thash_val = (a_len * thash_val + ord(text[i])) % q
-        if i < p_len - 1:
-            h = (a_len * h + 1) % q
-    for i in range(t_len - p_len + 1):
-        if phash_val == thash_val and pattern == text[i:i+p_len]:
-            ind.append(str(i))
-        if i < t_len - p_len:
-            thash_val = (a_len * (thash_val - ord(text[i]) * h) + ord(text[i + p_len])) % q
-    return ind
+def read_from_file():
+    filename = input()
+    with open(filename) as f:
+        pattern = f.readline().strip()
+        text = f.readline().strip()
+    return pattern, text
+
+
+def find_occurrences(pattern, text):
+    p = len(pattern)
+    t = len(text)
+    pattern_hash = sum(ord(pattern[i]) * pow(10, p - i - 1) for i in range(p))
+    text_hash = sum(ord(text[i]) * pow(10, p - i - 1) for i in range(p))
+    occurrences = []
+    for i in range(t - p + 1):
+        if pattern_hash == text_hash and pattern == text[i:i+p]:
+            occurrences.append(i)
+        if i < t - p:
+            text_hash = (text_hash - ord(text[i]) * pow(10, p - 1)) * 10 + ord(text[i+p])
+    return occurrences
+
+
+def print_occurrences(occurrences):
+
+    if occurrences:
+        print(end="")
+        print(*occurrences)
+    else:
+        print("error")
+
 
 if __name__ == '__main__':
-    print_occurrences(get_occurrences(*read_input()))
+    input_type = get_input_type()
+    if input_type == 'K':
+        pattern, text = read_from_keyboard()
+    else:
+        pattern, text = read_from_file()
+    occurrences = find_occurrences(pattern, text)
+    print_occurrences(occurrences)
