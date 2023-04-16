@@ -1,74 +1,56 @@
+# python3
+# Rinalds Ulmanis, 7.grupa 221RDB152
+
+
 def read_input():
-    input_type = input().strip().upper()
+    ievade = input()
 
-    if input_type == "I":
-        pattern = input().strip()
-        text = input().strip()
-        return (input_type, pattern, text)
-    elif input_type == "F":
-        with open("tests/06") as f:
-            pattern = f.readline().strip()
-            text = f.readline().strip()
-        return (input_type, pattern, text)
-    else:
-        exit()
+    if "F" in ievade:
+        Fails = 'tests/06'
+        with open(Fails, 'r') as f:
+            pattern = f.readline().rstrip()
+            teksts = f.readline().rstrip()
+
+    elif "I" in ievade:
+        pattern = input().rstrip()
+        teksts = input().rstrip()
+
+    return pattern, teksts
 
 
-def rabin_karp(pattern, text):
-    p = len(pattern)
-    t = len(text)
-    if p > t:
-        return []
+def print_occurrences(output):
+    print(' '.join(str(x) for x in output))
 
-    prime = 1000000007
-    multiplier = 263
-    pattern_hash = 0
-    text_hash = 0
-    result = []
+
+def get_occurrences(pattern, text):
+    ag = 256
+    pg = len(pattern)
+    tg = len(text)
+    q = 101
+
+    indeks = []
+    p_hash = 0
+    t_hash = 0
     h = 1
 
-    for i in range(p - 1):
-        h = (h * multiplier) % prime
+    for i in range(pg - 1):
+        h = (h * ag) % q
 
-    for i in range(p):
-        pattern_hash = (pattern_hash * multiplier + ord(pattern[i])) % prime
-        text_hash = (text_hash * multiplier + ord(text[i])) % prime
+    for i in range(pg):
+        p_hash = (ag * p_hash + ord(pattern[i])) % q
+        t_hash = (ag * t_hash + ord(text[i])) % q
 
-    for i in range(t - p + 1):
-        if pattern_hash == text_hash:
-            if pattern == text[i:i + p]:
-                result.append(i)
-        if i < t - p:
-            text_hash = (multiplier * (text_hash - ord(text[i]) * h) + ord(text[i + p])) % prime
-            if text_hash < 0:
-                text_hash += prime
-    return result
+    for i in range(tg - pg + 1):
+        if p_hash == t_hash:
+            if pattern == text[i:i + pg]:
+                indeks.append(i)
 
+        if i < tg - pg:
+            t_hash = (ag * (t_hash - ord(text[i]) * h) + ord(text[i + pg])) % q
+            t_hash = (t_hash + q) % q
 
-def print_occurrences(occurrences):
-    print(" ".join(str(x) for x in occurrences))
+    return indeks
 
 
 if __name__ == '__main__':
-    input_type, pattern, text = read_input()
-    occurrences = rabin_karp(pattern, text)
-    print_occurrences(occurrences)
-
-
-def print_occurrences(occurrences):
-
-    if occurrences:
-        print(end="")
-        print(*occurrences)
-    else:
-        print("error")
-
-
-if __name__ == '__main__':
-    input_type = get_input_type()
-    if input_type == 'K':
-        pattern, text = read_from_keyboard()
-    else:
-        pattern, text = read_from_file()
-    occurrences = find_occurrences(pattern, text)
-    print_occurrences(occurrences)
+    print_occurrences(get_occurrences(*read_input()))
