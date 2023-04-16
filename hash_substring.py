@@ -1,32 +1,56 @@
 # python3
+# Rinalds Ulmanis, 7.grupa 221RDB152
+
 
 def read_input():
-    # this function needs to aquire input both from keyboard and file
-    # as before, use capital i (input from keyboard) and capital f (input from file) to choose which input type will follow
-    
-    
-    # after input type choice
-    # read two lines 
-    # first line is pattern 
-    # second line is text in which to look for pattern 
-    
-    # return both lines in one return
-    
-    # this is the sample return, notice the rstrip function
-    return (input().rstrip(), input().rstrip())
+    ievade = input()
+
+    if "F" in ievade:
+        Fails = 'tests/06'
+        with open(Fails, 'r') as f:
+            pattern = f.readline().rstrip()
+            teksts = f.readline().rstrip()
+
+    elif "I" in ievade:
+        pattern = input().rstrip()
+        teksts = input().rstrip()
+
+    return pattern, teksts
+
 
 def print_occurrences(output):
-    # this function should control output, it doesn't need any return
-    print(' '.join(map(str, output)))
+    print(' '.join(str(x) for x in output))
+
 
 def get_occurrences(pattern, text):
-    # this function should find the occurances using Rabin Karp alghoritm 
+    ag = 256
+    pg = len(pattern)
+    tg = len(text)
+    q = 101
 
-    # and return an iterable variable
-    return [0]
+    indeks = []
+    p_hash = 0
+    t_hash = 0
+    h = 1
+
+    for i in range(pg - 1):
+        h = (h * ag) % q
+
+    for i in range(pg):
+        p_hash = (ag * p_hash + ord(pattern[i])) % q
+        t_hash = (ag * t_hash + ord(text[i])) % q
+
+    for i in range(tg - pg + 1):
+        if p_hash == t_hash:
+            if pattern == text[i:i + pg]:
+                indeks.append(i)
+
+        if i < tg - pg:
+            t_hash = (ag * (t_hash - ord(text[i]) * h) + ord(text[i + pg])) % q
+            t_hash = (t_hash + q) % q
+
+    return indeks
 
 
-# this part launches the functions
 if __name__ == '__main__':
     print_occurrences(get_occurrences(*read_input()))
-
