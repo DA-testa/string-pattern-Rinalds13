@@ -24,6 +24,12 @@ def get_occurrences(pattern, text):
     hash_ver = nev = i = j = h = 0
     # and return an iterable variable
     return [0]
+    
+    for i in range(pg):
+    hash_ver = (hash_ver * ag + ord(pattern[i])) % q
+    nev = (nev * ag + ord(text[i])) % q
+    if i < pg - 1:
+        h = (ag * h + 1) % q
 
 
 # this part launches the functions
