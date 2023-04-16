@@ -1,36 +1,33 @@
 def read_input():
-    ievade = input()
-    if ievade.startswith('F'):
+    c = input()
+    if c.startswith('F'):
         with open('tests/06', 'r') as f:
-            modelis, teksts = map(str.strip, f.readlines())
+            pattern, text = map(str.strip, f.readlines())
     else:
-        modelis, teksts = input().strip(), input().strip()
-    return modelis, teksts
-
+        pattern, text = input().strip(), input().strip()
+    return pattern, text
 
 def print_occurrences(output):
     print(' '.join(map(str, output)))
 
-
 def get_occurrences(pattern, text):
-    indeks = []
-    pg, tg = len(pattern), len(text)
-    ag, q = 256, 1
-    for i in range(pg - 1):
-        q = (ag * q)
-    hash_ver = nev = i = j = h = 0
-    for i in range(pg):
-        hash_ver = (ag * hash_ver + ord(pattern[i])) % q
-        nev = (ag * nev + ord(text[i])) % q
-        if i < pg - 1:
-            h = (ag * h + 1) % q
-    for i in range(tg - pg + 1):
-        if hash_ver == nev and pattern == text[i:i+pg]:
-            indeks.append(str(i))
-        if i < tg - pg:
-            nev = (ag * (nev - ord(text[i]) * h) + ord(text[i + pg])) % q
-    return indeks
-
+    ind = []
+    p_len, t_len = len(pattern), len(text)
+    a_len, q = 256, 1
+    for i in range(p_len - 1):
+        q = (a_len * q)
+    phash_val = thash_val = i = j = h = 0
+    for i in range(p_len):
+        phash_val = (a_len * phash_val + ord(pattern[i])) % q
+        thash_val = (a_len * thash_val + ord(text[i])) % q
+        if i < p_len - 1:
+            h = (a_len * h + 1) % q
+    for i in range(t_len - p_len + 1):
+        if phash_val == thash_val and pattern == text[i:i+p_len]:
+            ind.append(str(i))
+        if i < t_len - p_len:
+            thash_val = (a_len * (thash_val - ord(text[i]) * h) + ord(text[i + p_len])) % q
+    return ind
 
 if __name__ == '__main__':
     print_occurrences(get_occurrences(*read_input()))
